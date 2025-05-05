@@ -5,7 +5,7 @@ import path from "path"
 import tailwindcss from '@tailwindcss/vite';
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/PrimeJobs", // 👈 this must match your repo name,
+  base: "/PrimeJobs/", // 👈 this must match your repo name,
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
