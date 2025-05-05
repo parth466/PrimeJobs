@@ -1,6 +1,7 @@
 import React from 'react';
 // src/components/Footer.jsx
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -15,19 +16,19 @@ const Footer = () => {
         {/* Links */}
         <div className="flex flex-col space-y-2">
           <h2 className="text-lg font-semibold text-white mb-1">Quick Links</h2>
-          <a href="/" className="hover:text-white transition duration-200">Home</a>
-          <a href="/about" className="hover:text-white transition duration-200">About</a>
-          <a href="/contact" className="hover:text-white transition duration-200">Contact</a>
-          <a href="/jobs" className="hover:text-white transition duration-200">Jobs</a>
+          <Link to="/" className="hover:text-white transition duration-200">Home</Link>
+          <Link to="/about" className="hover:text-white transition duration-200">About</Link>
+          <Link to="/contact" className="hover:text-white transition duration-200">Contact</Link>
+          <Link to="/jobs" className="hover:text-white transition duration-200">Jobs</Link>
         </div>
 
         {/* Socials */}
         <div>
           <h2 className="text-lg font-semibold text-white mb-2">Follow Us</h2>
           <div className="flex space-x-4">
-            <a href="#" className="hover:text-white transition duration-200"><FaGithub size={24} /></a>
-            <a href="#" className="hover:text-white transition duration-200"><FaLinkedin size={24} /></a>
-            <a href="#" className="hover:text-white transition duration-200"><FaTwitter size={24} /></a>
+            <Link to="#" className="hover:text-white transition duration-200"><FaGithub size={24} /></Link>
+            <Link to="#" className="hover:text-white transition duration-200"><FaLinkedin size={24} /></Link>
+            <Link to="#" className="hover:text-white transition duration-200"><FaTwitter size={24} /></Link>
           </div>
         </div>
       </div>
