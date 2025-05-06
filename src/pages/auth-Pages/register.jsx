@@ -35,7 +35,11 @@ const Register = () => {
         password,
         role,
       });
-      const API_BASE_URL = import.meta.env.VITE_API_URL ;
+      
+      const API_BASE_URL = import.meta.env.MODE === "production"
+      ? "https://primejobs.onrender.com"
+      : "http://localhost:3000";
+    
       console.log("API_BASE_URL:", API_BASE_URL); // Debug log
       // Then use it like:
   //  || "http://localhost:3000"
