@@ -8,8 +8,8 @@
     "dev": "vite --host",
     "build": "vite build",
     "postbuild": "cpy dist/index.html dist/404.html",
-    "predeploy": "npm run build && npm run postbuild",
-"deploy": "gh-pages -d dist -f && git checkout main"
+    "predeploy": "npm run build",
+"deploy": "gh-pages -d dist"
 ,    "start": "cd src/backend && nodemon server.js"
   },
   "dependencies": {
