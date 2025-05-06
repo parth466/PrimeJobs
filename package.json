@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "postbuild": "copy dist\\index.html dist\\404.html",
+"postbuild": "cpy dist/index.html dist/404.html",
     "predeploy": "npm run build && npm run postbuild",
     "deploy": "gh-pages -d dist --repo https://github.com/parth466/Prime-jobs.git && echo Deployed to: https://parth466.github.io/Prime-jobs"
   },
@@ -55,6 +55,7 @@
     "@types/whatwg-url": "^13.0.0",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.21",
+    "cpy-cli": "^5.0.0",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
@@ -65,6 +66,6 @@
     "vite": "^6.3.1"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu":"*"
+    "@rollup/rollup-linux-x64-gnu": "*"
   }
 }
