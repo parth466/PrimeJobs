@@ -9,7 +9,7 @@
     "build": "vite build",
     "postbuild": "cpy dist/index.html dist/404.html",
     "predeploy": "npm run build && npm run postbuild",
-    "deploy": "gh-pages -d dist --repo https://github.com/parth466/Prime-jobs.git && echo Deployed to: https://parth466.github.io/Prime-jobs",
+    "deploy": "gh-pages -d dist ",
     "start": "cd src/backend && nodemon server.js"
   },
   "dependencies": {
