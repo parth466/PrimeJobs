@@ -3,14 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://parth466.github.io/PrimeJobs",
+  
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "postbuild": "cpy dist/index.html dist/404.html",
-    "predeploy": "npm run build",
-"deploy": "gh-pages -d dist"
-,    "start": "cd src/backend && nodemon server.js"
+    "start": "cd src/backend && nodemon server.js"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.4",
