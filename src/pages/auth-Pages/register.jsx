@@ -98,7 +98,7 @@ const Register = () => {
         {/* Registration Form */}
         <div className="relative  w-full max-w-sm  p-6 rounded-lg shadow-lg">
           <CardHeader>
-            <CardTitle className="text-2xl">Register</CardTitle>
+            <CardTitle className="text-2xl">Register hello</CardTitle>
             <CardDescription>
               Fill out the form below to create an account
             </CardDescription>
