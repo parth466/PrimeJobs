@@ -10,7 +10,7 @@ const Footer = () => {
         {/* Branding */}
         <div>
           <h1 className="text-2xl font-bold text-white mb-2">Prime Jobs</h1>
-          <p className="text-sm">Find your dream job or the perfect candidate with ease.</p>
+          <p className="text-sm">Find your dream job or the perfect candidate with ease. hiii</p>
         </div>
 
         {/* Links */}
