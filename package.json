@@ -7,9 +7,10 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-"postbuild": "cpy dist/index.html dist/404.html",
+    "postbuild": "cpy dist/index.html dist/404.html",
     "predeploy": "npm run build && npm run postbuild",
-    "deploy": "gh-pages -d dist --repo https://github.com/parth466/Prime-jobs.git && echo Deployed to: https://parth466.github.io/Prime-jobs"
+    "deploy": "gh-pages -d dist --repo https://github.com/parth466/Prime-jobs.git && echo Deployed to: https://parth466.github.io/Prime-jobs",
+    "start": "cd src/backend && nodemon server.js"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.4",
@@ -30,6 +31,7 @@
     "lucide-react": "^0.488.0",
     "mongoose": "^8.13.2",
     "nodemailer": "^6.10.1",
+    "nodemon": "^3.1.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
