@@ -59,6 +59,7 @@ const Register = () => {
       });
   
       if (!res.ok) {
+        console.error("🚫 Server error:", data); // This will show the real cause
         throw new Error("Failed to register. Status: " + res.status);
       }
   
