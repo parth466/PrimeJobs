@@ -3,14 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://parth466.github.io/PrimeJobs/",
-"scripts": {
-  "dev": "vite --host",
-  "build": "vite build",
-  "predeploy": "npm run build",
-"deploy": "gh-pages -d dist"
-}
-,
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build"
+  },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.4",
     "@radix-ui/react-select": "^2.2.2",
@@ -49,10 +45,9 @@
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
-    "gh-pages": "^6.3.0",
     "globals": "^16.0.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.4",
-    "vite": "^6.3.1"
+    "vite": "^4.5.0"
   }
 }
