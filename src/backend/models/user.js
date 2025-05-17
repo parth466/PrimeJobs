@@ -19,7 +19,56 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['Recruiter', 'JobSeeker'], // Defines the role of the user
-    // required: true,
+    required: true,
+  },
+  bio: {
+    type: String, // For JobSeekers
+    trim: true,
+  },
+  skills: {
+    type: [String], // Array of skills
+  },
+  website:{
+    type: String, // URL of the website
+  },
+  location:{
+    type: String, // Address of the user
+    trim: true,
+  },
+  phone:{
+    type: String, // Phone number of the user
+    trim: true,
+  },
+  profileImage: {
+    type: String, // URL or path to the profile picture
+  },
+  resumeLink: {
+    type: String, // URL or path to the resume
+  },
+  experience: [
+    {
+      company: String,
+      role: String,
+      duration: String,
+    },
+  ],
+  education: [
+    {
+      institute: String,
+      degree: String,
+      year: String,
+    },
+  ],
+  company: {
+    type: String, // For Recruiters
+    trim: true,
+  },
+  about: {
+    type: String, // About the company for Recruiters
+    trim: true,
+  },
+  logo: {
+    type: String, // Company logo for Recruiters
   },
   appliedJobs: [
     {
@@ -27,13 +76,8 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Job', // Reference to the Job model
       },
-      resume: {
-        type: String, // URL or path to the resume file
-        // required: true,
-      },
-      coverLetter: {
-        type: String,
-      },
+      resume: String, // URL or path to the resume file
+      coverLetter: String,
       appliedAt: {
         type: Date,
         default: Date.now,
@@ -55,6 +99,6 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
 const User = mongoose.models.User || mongoose.model('User', userSchema);
-export default User; // Export the user schema for use in other files
-// module.exports = mongoose.model('User', userSchema);
+export default User;

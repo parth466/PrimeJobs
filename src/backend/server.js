@@ -23,7 +23,7 @@ app.use("/api/user", userRoutes);
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('Connected to MongoDB');
-    app.listen(port, '0.0.0.0', () => {
+    app.listen(port, () => {
       console.log(`Server running on http://0.0.0.0:${port}`);
     });
     

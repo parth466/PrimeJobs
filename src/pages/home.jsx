@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { useAuth } from '@/middleware/AuthContext';
 const home = () => {
   const links = [
     { name: 'Open roles', href: '#' },
@@ -35,14 +37,21 @@ const home = () => {
     },
   ];
   
+  const user = useAuth();
+  const id = user?.id;
+  const name = user?.name;
+  const email = user?.email;
+  const role = user?.role;
+  console.log(name, email, role, id);
   return (
   <>
+  
    <div className="relative overflow-hidden">
       <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48">
         <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
           <div className="sm:max-w-lg">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-              Best Jobs are finally here by parth
+              Best Jobs are finally here Mr {name} {role === "JobSeeker" ? "JobSeeker" : "Recruiter"}!
             </h1>
             <p className="mt-4 text-xl text-white">
               This year, our Prime Jobs  will shelter you from the harsh Financial problems of a world that doesn't care

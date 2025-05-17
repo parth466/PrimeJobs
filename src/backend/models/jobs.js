@@ -1,64 +1,69 @@
 import mongoose from "mongoose";
 
-const jobSchema = new mongoose.Schema({
+const jobSchema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        required: true,
-        trim: true,
+      type: String,
+      required: true,
+      trim: true,
     },
     description: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     location: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
+      default: "Remote", // Default to "Remote"
     },
     salary: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: false, // Optional salary field
     },
     jobType: {
-        type: String,
-        enum: ['Full-Time', 'Part-Time', 'Contract', 'Internship', 'Freelance'],
-        required: true,
+      type: String,
+      enum: ['Full-Time', 'Part-Time', 'Contract', 'Internship', 'Freelance'],
+      required: true,
     },
     skillsRequired: {
-        type: [String],
-        required: true,
+      type: [String],
+      required: true,
     },
     postedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Assuming you have a User model for recruiters
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User', // Reference to recruiter
+      required: true,
     },
     applicants: [
-        {
-            seekerId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User', // Assuming you have a User model for work seekers
-            },
-            resume: {
-                type: String, // URL or path to the resume file
-                required: true,
-            },
-            coverLetter: {
-                type: String,
-            },
-            appliedAt: {
-                type: Date,
-                default: Date.now,
-            },
+      {
+        seekerId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User', // Reference to work seeker
         },
+        resume: {
+          type: String, // URL or path to resume file
+          required: true,
+        },
+        coverLetter: {
+          type: String,
+        },
+        appliedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
     ],
-    createdAt: {
-        type: Date,
-        default: Date.now,
+    status: {
+      type: String,
+      enum: ['Open', 'Closed', 'Filled'],
+      default: 'Open',
     },
-    updatedAt: {
-        type: Date,
-        default: Date.now,
+    category: {
+      type: String,
+      trim: true,
     },
-});
+  },
+  { timestamps: true } // Automatically manage createdAt and updatedAt
+);
 
-module.exports = mongoose.model('Job', jobSchema);
+export default mongoose.model('Job', jobSchema);
