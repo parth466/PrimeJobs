@@ -46,7 +46,7 @@ const handleVerifyOTP = async (e) => {
    setLoading(true);
    try{
       const res = await axios.post(`${API_BASE_URL}/api/user/login`, {
-         email: localStorage.getItem("email"),
+         email: email,
          otp: value,
       });
       if (res.data.success) {
