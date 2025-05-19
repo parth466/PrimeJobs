@@ -3,7 +3,10 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from '../backend/api/routes/user.js';
-
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config(); // Load env first!
 
 const app = express();
