@@ -17,8 +17,19 @@ app.get('/', (req, res) => {
 });
 
 app.use("/api/user", userRoutes);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // console.log('MONGO_URI:', process.env.MONGO_URI); // 🔥 Debug here
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    // Multer-specific errors
+    return res.status(400).json({ success: false, message: err.message });
+  } else if (err) {
+    // Generic errors
+    return res.status(500).json({ success: false, message: "An internal server error occurred." });
+  }
+  next();
+});
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {

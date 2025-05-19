@@ -1,5 +1,5 @@
 // src/pages/EditProfile.jsx
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams,  } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

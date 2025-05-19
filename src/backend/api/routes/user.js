@@ -7,6 +7,117 @@ import dotenv from 'dotenv';
 import Otp from '../../models/otp.js';
 dotenv.config(); // Load environment variables from .env file
 const router = express.Router();
+import multer from 'multer';
+import path from 'path';
+
+const allowedMimeTypes = ["image/png", "image/jpeg", "application/pdf"]; // Allowed types
+
+const fileFilter = (req, file, cb) => {
+  if (allowedMimeTypes.includes(file.mimetype)) {
+    cb(null, true); // Accept the file
+  } else {
+    cb(new Error("Invalid file type. Only PNG, JPG, and PDF files are allowed."), false); // Reject the file
+  }
+};
+// Making the multer storage 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "uploads")); // Save files in 'uploads' directory
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${Date.now()}-${file.originalname}`;
+    cb(null, uniqueName);
+  },
+});
+ const upload = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 1 * 1024 * 1024, // 1 MB limit
+  },
+});
+
+//Route for Profile picture 
+// Profile Picture Upload Route
+router.post("/upload/profile-picture/:userId", upload.single("file"), async (req, res) => {
+  const { userId } = req.params;
+
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: "No file uploaded or invalid file type." });
+  }
+
+  try {
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+
+    // Update user document with the profile picture path
+    user.profileImage = `/uploads/${req.file.filename}`;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile picture uploaded successfully!",
+      filePath: user.profileImage,
+    });
+  } catch (error) {
+    console.error("Error uploading profile picture:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+});
+//Route for Resume upload
+
+//Post request for uploading file to uploads folder
+// Resume Upload Route
+router.post("/upload/resume/:userId", upload.single("file"), async (req, res) => {
+  const { userId } = req.params;
+
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: "No file uploaded or invalid file type." });
+  }
+
+  try {
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+
+    // Ensure the user is a JobSeeker
+    if (user.role !== "JobSeeker") {
+      return res.status(403).json({
+        success: false,
+        message: "Only JobSeekers can upload resumes.",
+      });
+    }
+
+    // Update user document with the resume path
+    user.resumeLink = `/uploads/${req.file.filename}`;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Resume uploaded successfully!",
+      filePath: user.resumeLink,
+    });
+  } catch (error) {
+    console.error("Error uploading resume:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+});
+
+
+
+
+
 
 router.post("/register", async (req, res) => {
   try {
