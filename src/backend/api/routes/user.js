@@ -1,118 +1,145 @@
 import express from 'express';
+import dotenv from 'dotenv';
+import multer from 'multer';
+import path from 'path';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../../models/user.js';
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
 import Otp from '../../models/otp.js';
-dotenv.config(); // Load environment variables from .env file
-const router = express.Router();
-import multer from 'multer';
-import path from 'path';
+import cloudinary from '../../cloudinary.js'; // Your configured Cloudinary
 
-const allowedMimeTypes = ["image/png", "image/jpeg", "application/pdf"]; // Allowed types
+
+// import multer from 'multer';
+// import path from 'path';
+import fs from 'fs';
+dotenv.config();
+const router = express.Router();
+// ✅ Allow only specific file types
+const allowedMimeTypes = ['image/png', 'image/jpeg', 'application/pdf'];
 
 const fileFilter = (req, file, cb) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true); // Accept the file
+    cb(null, true);
   } else {
-    cb(new Error("Invalid file type. Only PNG, JPG, and PDF files are allowed."), false); // Reject the file
+    cb(new Error('Invalid file type. Only PNG, JPG, and PDF allowed.'), false);
   }
 };
-// Making the multer storage 
+
+// ✅ Create absolute path to /uploads at project root
+const uploadDir = path.join(process.cwd(), 'uploads');
+
+// ✅ Ensure the uploads directory exists
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
+// ✅ Configure Multer to save to disk
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "uploads")); // Save files in 'uploads' directory
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
   },
-  filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${file.originalname}`;
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${ext}`;
     cb(null, uniqueName);
-  },
-});
- const upload = multer({
-  storage,
-  fileFilter,
-  limits: {
-    fileSize: 1 * 1024 * 1024, // 1 MB limit
-  },
+  }
 });
 
-//Route for Profile picture 
-// Profile Picture Upload Route
+// ✅ Final Multer upload setup
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 1 * 1024 * 1024 }, // 1MB limit
+});
+
+
+
+// --- ✅ UPLOAD PROFILE PICTURE ---
 router.post("/upload/profile-picture/:userId", upload.single("file"), async (req, res) => {
   const { userId } = req.params;
 
   if (!req.file) {
-    return res.status(400).json({ success: false, message: "No file uploaded or invalid file type." });
+    return res.status(400).json({ success: false, message: "No file uploaded." });
   }
 
   try {
-    // Find the user
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found." });
-    }
+    if (!user) return res.status(404).json({ success: false, message: "User not found." });
 
-    // Update user document with the profile picture path
-    user.profileImage = `/uploads/${req.file.filename}`;
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'profile_pictures',
+      resource_type: 'image'
+    });
+if(result.secure_url){console.log("Image uploaded successfully:", result.secure_url);}
+    // Delete the local file after uploading to Cloudinary
+    fs.unlinkSync(req.file.path);
+    user.profileImage = result.secure_url;
     await user.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Profile picture uploaded successfully!",
-      filePath: user.profileImage,
-    });
+    res.status(200).json({ success: true, message: "Profile picture uploaded!", filePath: result.secure_url });
   } catch (error) {
     console.error("Error uploading profile picture:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error.",
-    });
+    res.status(500).json({ success: false, message: "Internal server error." });
   }
 });
-//Route for Resume upload
 
-//Post request for uploading file to uploads folder
-// Resume Upload Route
+// --- ✅ UPLOAD COMPANY LOGO ---
+router.post("/upload/companylogo/:userId", upload.single("file"), async (req, res) => {
+  const { userId } = req.params;
+
+  if (!req.file) return res.status(400).json({ success: false, message: "No file uploaded." });
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ success: false, message: "User not found." });
+
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'company_logos',
+      resource_type: 'image'
+    });
+
+    user.Logo = result.secure_url;
+    await user.save();
+
+    res.status(200).json({ success: true, message: "Company logo uploaded!", filePath: result.secure_url });
+  } catch (error) {
+    console.error("Error uploading company logo:", error);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+});
+
+// --- ✅ UPLOAD RESUME ---
 router.post("/upload/resume/:userId", upload.single("file"), async (req, res) => {
   const { userId } = req.params;
 
-  if (!req.file) {
-    return res.status(400).json({ success: false, message: "No file uploaded or invalid file type." });
-  }
+  if (!req.file) return res.status(400).json({ success: false, message: "No file uploaded." });
 
   try {
-    // Find the user
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found." });
-    }
+    if (!user) return res.status(404).json({ success: false, message: "User not found." });
 
-    // Ensure the user is a JobSeeker
     if (user.role !== "JobSeeker") {
-      return res.status(403).json({
-        success: false,
-        message: "Only JobSeekers can upload resumes.",
-      });
+      return res.status(403).json({ success: false, message: "Only JobSeekers can upload resumes." });
     }
 
-    // Update user document with the resume path
-    user.resumeLink = `/uploads/${req.file.filename}`;
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'resumes',
+      resource_type: 'auto'
+    });
+
+    user.resumeLink = result.secure_url;
     await user.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Resume uploaded successfully!",
-      filePath: user.resumeLink,
-    });
+    res.status(200).json({ success: true, message: "Resume uploaded!", fileUrl: result.secure_url });
   } catch (error) {
     console.error("Error uploading resume:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error.",
-    });
+    res.status(500).json({ success: false, message: "Internal server error." });
   }
 });
+
+
+
 
 
 

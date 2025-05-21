@@ -41,31 +41,54 @@ export default function EditProfile() {
     }
   };
 
-  const addSectionItem = (section) => {
-    const newItem = section === "experience" || section === "education"
-      ? { company: "", role: "", duration: "" }
-      : { title: "", category: "", location: "" };
-    setFormData({
-      ...formData,
-      [section]: [...formData[section], newItem],
-    });
-  };
-
-  const removeSectionItem = (section, index) => {
-    const updatedSection = [...formData[section]];
-    updatedSection.splice(index, 1);
-    setFormData({ ...formData, [section]: updatedSection });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
+      // Upload profile picture if provided
+      if (formData.profileImage) {
+        const imageData = new FormData();
+        imageData.append("file", formData.profileImage);
+        await fetch(`${API_BASE_URL}/api/user/upload/profile-picture/${id}`, {
+          method: "POST",
+          body: imageData,
+        });
+      }
+
+      // Upload resume if role is JobSeeker
+      if (role === "JobSeeker" && formData.resume) {
+        const resumeData = new FormData();
+        resumeData.append("file", formData.resume);
+        await fetch(`${API_BASE_URL}/api/user/upload/resume/${id}`, {
+          method: "POST",
+          body: resumeData,
+        });
+      }
+
+      // Upload company logo if role is Recruiter
+      if (role === "Recruiter" && formData.companyLogo) {
+        const logoData = new FormData();
+        logoData.append("file", formData.companyLogo);
+        await fetch(`${API_BASE_URL}/api/user/upload/companylogo/${id}`, {
+          method: "POST",
+          body: logoData,
+        });
+      }
+
+      // Now send profile text data (excluding files)
+      const cleanData = {
+        ...formData,
+        profileImage: undefined,
+        resume: undefined,
+        companyLogo: undefined,
+      };
+
       const response = await fetch(`${API_BASE_URL}/api/user/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(cleanData),
       });
 
       if (response.ok) {
@@ -79,6 +102,8 @@ export default function EditProfile() {
       alert("An error occurred while updating the profile.");
     }
   };
+
+
 
   return (
     <div className="p-6 bg-[#121212] min-h-screen text-white">

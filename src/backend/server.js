@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://prime-jobs.vercel.app'
+  'https://prime-jobs.vercel.app','http://localhost:5173'
 ];
 
 app.use(cors({
