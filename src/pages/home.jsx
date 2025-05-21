@@ -51,7 +51,7 @@ const home = () => {
         <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
           <div className="sm:max-w-lg">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-              Best Jobs are finally here Mr/Mrs {name} {role === "JobSeeker" ? "JobSeeker" : "Recruiter"}!
+              Best Jobs are finally here {name} {role === "JobSeeker" ? "JobSeeker" : "Recruiter"}!
             </h1>
             <p className="mt-4 text-xl text-white">
               This year, our Prime Jobs  will shelter you from the harsh Financial problems of a world that doesn't care
